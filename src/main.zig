@@ -27,14 +27,13 @@ fn update() void {
     var mx: ImVec2 = .{ .x = 0, .y = 0 };
     igGetWindowContentRegionMax(&mx);
 
+    // some more ways to check out our window size
     var vp = igGetWindowViewport();
     var vp_x: i32 = @floatToInt(i32, vp.*.Size.x);
     var vp_y: i32 = @floatToInt(i32, vp.*.Size.y);
     //    std.log.info("{}x{}", .{ w, h });
     //    std.log.info("ViewPort: {}x{}", .{ vp_x, vp_y });
     //    std.log.info("Mx: {}x{}", .{ mx.x, mx.y });
-
-    // if (igBegin("hello", null, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_AlwaysHorizontalScrollbar | ImGuiWindowFlags_NoTitleBar)) {
 
     if (igBegin("hello", null, ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_AlwaysHorizontalScrollbar | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_MenuBar)) {
         igSetWindowPosStr("hello", .{ .x = 0, .y = 0 }, ImGuiCond_Always);
@@ -50,7 +49,8 @@ fn update() void {
             if (igBeginMenu("Quit", true)) {
                 defer igEndMenu();
                 if (igMenuItemBool("now!", "Quit now", false, true)) {
-                    sapp_request_quit();
+                    // sapp_request_quit(); // reports the attempt to free an invalid pointer
+                    std.process.exit(0);
                 }
             }
         }
