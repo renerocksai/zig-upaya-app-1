@@ -36,6 +36,13 @@ If you name the link differently, then modify the following line in `build.zig` 
 const upaya_dir = "./zig-upaya/";
 ```
 
+... and also this line in `src/main.zig`:
+
+```zig
+const Texture = @import("../zig-upaya/src/texture.zig").Texture;
+```
+
+
 Note: On Windows, you probably have to move the entire `zig-upaya` directory into the `zig-upaya-app-1` directory.
 
 # build and run
