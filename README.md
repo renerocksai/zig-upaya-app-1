@@ -6,7 +6,7 @@ It uses the default and a custom font, and scrollbars to verify that window resi
 
 ![image](https://user-images.githubusercontent.com/30892199/109077312-351f1e00-76fc-11eb-9f5b-2a61160ef2a7.png)
 
-
+The screenshot was taken on my Chromebook, a 2015 Google Pixelbook, running Ubuntu 20.04 under ChromeOS.
 
 
 # prerequisites
