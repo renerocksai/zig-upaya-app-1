@@ -15,7 +15,7 @@ The screenshot was taken on my Chromebook, a 2015 Google Pixelbook, running Ubun
 Clone [zig-upaya](https://github.com/prime31/zig-upaya):
 
 ```bash
-$ git clone git clone --recursive https://github.com/prime31/zig-upaya/
+$ git clone --recursive https://github.com/prime31/zig-upaya/
 ```
 Clone this repository:
 
@@ -35,6 +35,8 @@ If you name the link differently, then modify the following line in `build.zig` 
 ```zig
 const upaya_dir = "./zig-upaya/";
 ```
+
+Note: On Windows, you probably have to move the entire `zig-upaya` directory into the `zig-upaya-app-1` directory.
 
 # build and run
 
