@@ -2,7 +2,10 @@
 
 My first steps creating an imgui app in zig.
 
-It uses the default and a custom font.
+It uses the default and a custom font, and scrollbars to verify that window resizes work.
+
+![image](https://user-images.githubusercontent.com/30892199/109077312-351f1e00-76fc-11eb-9f5b-2a61160ef2a7.png)
+
 
 
 
