@@ -1,6 +1,6 @@
 # zig-upaya-app-1
 
-My first steps creating an imgui app in zig.
+My first steps creating an imgui app in zig. The app doesn't serve any user purpose, it is just my playground to test cross-platform (high performance) GUI app development with zig.
 
 It uses the default and a custom font, and scrollbars to verify that window resizes work.
 
