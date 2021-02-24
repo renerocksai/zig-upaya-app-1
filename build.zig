@@ -2,8 +2,15 @@ const builtin = @import("builtin");
 const std = @import("std");
 const Builder = std.build.Builder;
 
-// const upaya_build = @import("build_upaya.zig");
-const upaya_build = @import("./zig-upaya/src/build.zig");
+// tell where you checked out zig-upaya
+//    It needs to be within your "package" directory for zig to accept it.
+//    I checked it out in the parent directory and placed a link here with 
+//    `ln -s ../zig-upaya`.
+//    On Windows, you probably have to copy zig-upaya instead of linking to it.
+//    For that case I've already put `zig-upaya/` into the .gitignore file.
+const upaya_dir = "./zig-upaya/";
+
+const upaya_build = @import(upaya_dir ++ "src/build.zig");
 
 pub fn build(b: *Builder) void {
     const target = b.standardTargetOptions(.{});
@@ -11,7 +18,8 @@ pub fn build(b: *Builder) void {
     // use a different cache folder for macos arm builds
     b.cache_root = if (std.builtin.os.tag == .macos and std.builtin.arch == std.builtin.Arch.aarch64) "zig-arm-cache" else "zig-cache";
 
-    // first item in list will be added as "run" so `zig build run` will always work
+    // declare optional other zig executables here
+    // format is: executable_name, path_to_zig_file
     const examples = [_][2][]const u8{
         [_][]const u8{ "rene", "src/main.zig" },
     };
@@ -28,6 +36,7 @@ pub fn build(b: *Builder) void {
 
 /// creates an exe with all the required dependencies
 fn createExe(b: *Builder, target: std.build.Target, name: []const u8, source: []const u8) !void {
+    // support for cli apps
     const is_cli = std.mem.endsWith(u8, name, "cli");
 
     var exe = b.addExecutable(name, source);
@@ -38,7 +47,7 @@ fn createExe(b: *Builder, target: std.build.Target, name: []const u8, source: []
     if (is_cli) {
         upaya_build.linkCommandLineArtifact(b, exe, target, "");
     } else {
-        addUpayaToArtifact(b, exe, target, "./zig-upaya/");
+        addUpayaToArtifact(b, exe, target, upaya_dir);
     }
 
     const run_cmd = exe.run();
