@@ -38,7 +38,7 @@ fn update() void {
 
             if (igBeginMenu("View", true)) {
                 defer igEndMenu();
-                my_fonts.pushFontScaled(129);
+                my_fonts.pushFontScaled(64);
                 if (igMenuItemBool("Fullscreen", "Toggle full-screen mode!", false, true)) {
                     sapp_toggle_fullscreen();
                 }
@@ -47,7 +47,7 @@ fn update() void {
 
             if (igBeginMenu("Quit", true)) {
                 defer igEndMenu();
-                my_fonts.pushFontScaled(14);
+                my_fonts.pushFontScaled(32);
                 if (igMenuItemBool("now!", "Quit now", false, true)) {
                     // sapp_request_quit(); // NOTE: reports the attempt to free an invalid pointer
                     std.process.exit(0);
