@@ -7,8 +7,6 @@ usingnamespace sokol;
 
 const my_fonts = @import("myscalingfonts.zig");
 
-var my_font: *ImFont = undefined;
-
 pub fn main() !void {
     upaya.run(.{
         .init = init,
@@ -23,18 +21,8 @@ fn init() void {
 }
 
 fn update() void {
-    var w = sapp_width();
-    var h = sapp_height();
     var mx: ImVec2 = .{ .x = 0, .y = 0 };
     igGetWindowContentRegionMax(&mx);
-
-    // some more ways to check out our window size
-    var vp = igGetWindowViewport();
-    var vp_x: i32 = @floatToInt(i32, vp.*.Size.x);
-    var vp_y: i32 = @floatToInt(i32, vp.*.Size.y);
-    //    std.log.info("{}x{}", .{ w, h });
-    //    std.log.info("ViewPort: {}x{}", .{ vp_x, vp_y });
-    //    std.log.info("Mx: {}x{}", .{ mx.x, mx.y });
 
     if (igBegin("hello", null, ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_AlwaysHorizontalScrollbar | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_MenuBar)) {
         igSetWindowPosStr("hello", .{ .x = 0, .y = 0 }, ImGuiCond_Always);
@@ -54,90 +42,27 @@ fn update() void {
                 if (igMenuItemBool("Fullscreen", "Toggle full-screen mode!", false, true)) {
                     sapp_toggle_fullscreen();
                 }
-                my_fonts.popFontScaled(); // NOTE: for some reason, defer-ring this inside the if block does not work!
+                my_fonts.popFontScaled();
             }
 
             if (igBeginMenu("Quit", true)) {
                 defer igEndMenu();
                 my_fonts.pushFontScaled(14);
                 if (igMenuItemBool("now!", "Quit now", false, true)) {
-                    // sapp_request_quit(); // reports the attempt to free an invalid pointer
+                    // sapp_request_quit(); // NOTE: reports the attempt to free an invalid pointer
                     std.process.exit(0);
                 }
-                my_fonts.popFontScaled(); // NOTE: for some reason, defer-ring this inside the if block does not work!
+                my_fonts.popFontScaled();
             }
         }
+
+        // we don't want the button size to be scaled shittily. Hence we look for the nearest (lower bound) font size.
+        my_fonts.pushFontScaled(my_fonts.getNearestFontSize(200));
         if (igButton("clickme", .{ .x = -1, .y = 0 })) {
             std.log.info("clicked!", .{});
         }
+        my_fonts.popFontScaled();
 
         igEnd();
     }
 }
-
-//fn loadFont() void {
-//    var io = igGetIO();
-//    _ = ImFontAtlas_AddFontDefault(io.Fonts, null);
-//
-//    // add our UbuntuMono font
-//    var icons_config = ImFontConfig_ImFontConfig();
-//    icons_config[0].MergeMode = true;
-//    icons_config[0].PixelSnapH = true;
-//    icons_config[0].FontDataOwnedByAtlas = false;
-//
-//    var data = @embedFile("../assets/Calibri Regular.ttf");
-//    //my_font = ImFontAtlas_AddFontFromMemoryTTF(io.Fonts, data, data.len, 14, icons_config, ImFontAtlas_GetGlyphRangesDefault(io.Fonts));
-//    my_font = ImFontAtlas_AddFontFromMemoryTTF(io.Fonts, data, data.len, 14, 0, 0);
-//
-//    var w: i32 = undefined;
-//    var h: i32 = undefined;
-//    var bytes_per_pixel: i32 = undefined;
-//    var pixels: [*c]u8 = undefined;
-//    ImFontAtlas_GetTexDataAsRGBA32(io.Fonts, &pixels, &w, &h, &bytes_per_pixel);
-//
-//    var tex = Texture.initWithData(pixels[0..@intCast(usize, w * h * bytes_per_pixel)], w, h, .nearest);
-//    ImFontAtlas_SetTexID(io.Fonts, tex.imTextureID());
-//}
-//
-
-// Font scaling stuff
-// void Initialise()
-//{
-//ImFont *fontA = AddDefaultFont(13);
-//ImFont *fontB = AddDefaultFont(64);
-//ImFont *fontC = AddDefaultFont(256);
-//}
-//
-//ImFont* ImGuiOverlay::AddDefaultFont( float pixel_size )
-//{
-//ImGuiIO &io = ImGui::GetIO();
-//ImFontConfig config;
-//config.SizePixels = pixel_size;
-//config.OversampleH = config.OversampleV = 1;
-//config.PixelSnapH = true;
-//ImFont *font = io.Fonts->AddFontDefault(&config);
-//return font;
-//}
-//
-//void ImGuiOverlay::DoFitTextToWindow(ImFont *font, const char *text)
-//{
-//ImGui::PushFont( font );
-//ImVec2 sz = ImGui::CalcTextSize(text);
-//ImGui::PopFont();
-//float canvasWidth = ImGui::GetWindowContentRegionWidth();
-//float origScale = font->Scale;
-//font->Scale = canvasWidth / sz.x;
-//ImGui::PushFont( font );
-//ImGui::Text("%s", text);
-//ImGui::PopFont();
-//font->Scale = origScale;
-//}
-//
-//void Draw()
-//{
-//// .... New frame and Window begin
-//DoFitTextToWindow( fontA, "Some Text" );
-//DoFitTextToWindow( fontB, "Some Other Text" );
-//DoFitTextToWindow( fontC, "Some Final Text" );
-//// .... Window end and end frame
-//}

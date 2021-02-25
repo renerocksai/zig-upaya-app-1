@@ -74,6 +74,31 @@ pub fn pushFontScaled(pixels: i32) void {
     last_font = font;
 }
 
+pub fn getNearestFontSize(pixels: i32) i32 {
+    var min_diff: i32 = 1000;
+    var found_font_size: i32 = baked_font_sizes[0];
+
+    // the bloody hash map says it doesn't support field access when trying to iterate:
+    //    var it = my_fonts.iterator();
+    //     for (it.next()) |item| {
+    for (baked_font_sizes) |fsize, i| {
+        var diff = pixels - fsize;
+
+        std.log.debug("diff={}, pixels={}, fsize={}", .{ diff, pixels, fsize });
+        // we only ever upscale, hence we look for positive differences only
+        if (diff >= 0) {
+            // we try to find the minimum difference
+            if (diff < min_diff) {
+                std.log.debug("  diff={} is < than {}, so our new temp found_font_size={}", .{ diff, min_diff, fsize });
+                min_diff = diff;
+                found_font_size = fsize;
+            }
+        }
+    }
+    std.log.debug("--> Nearest font size of {} is {}", .{ pixels, found_font_size });
+    return found_font_size;
+}
+
 pub fn popFontScaled() void {
     igPopFont();
     last_font.*.Scale = last_scale;
