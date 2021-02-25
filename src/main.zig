@@ -13,13 +13,21 @@ pub fn main() !void {
         .update = update,
         .app_name = "Super Awesome Sample",
         .window_title = "rene window",
+        .ini_file_storage = .none,
+        .swap_interval = 1, // ca 16ms
+        .width = 1920,
+        .height = 1080,
     });
 }
 
 fn init() void {
     my_fonts.loadFonts() catch unreachable;
+    // upaya.colors.setTintColor(upaya.colors.rgbaToVec4(0xcd, 0x0f, 0x00, 0xff));
 }
 
+var b: bool = true;
+
+// update will be called at every swap interval. with swap_interval = 1 above, we'll get 60 fps
 fn update() void {
     // replace the default font
     my_fonts.pushFontScaled(14);
@@ -64,10 +72,11 @@ fn update() void {
             std.log.info("clicked!", .{});
         }
         my_fonts.popFontScaled();
-
         igEnd();
 
         // pop the default font
         my_fonts.popFontScaled();
+
+        // igShowMetricsWindow(&b);
     }
 }
