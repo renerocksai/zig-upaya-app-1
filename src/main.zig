@@ -17,7 +17,7 @@ pub fn main() !void {
 }
 
 fn init() void {
-    loadFont2();
+    loadFont();
     std.log.info("Font: {}", .{my_font});
 }
 
@@ -62,27 +62,7 @@ fn update() void {
     }
 }
 
-//fn loadFont() void {
-//    var io = igGetIO();
-//    var myfont_config = ImFontConfig_ImFontConfig();
-//    myfont_config[0].MergeMode = true;
-//    myfont_config[0].PixelSnapH = true;
-//    myfont_config[0].FontDataOwnedByAtlas = false;
-//    my_font = ImFontAtlas_AddFontFromFileTTF(io.Fonts, "Ubuntu-B.ttf", 14, 0, 0);
-//
-//    if (true) {
-//        var w: i32 = undefined;
-//        var h: i32 = undefined;
-//        var bytes_per_pixel: i32 = undefined;
-//        var pixels: [*c]u8 = undefined;
-//        ImFontAtlas_GetTexDataAsRGBA32(io.Fonts, &pixels, &w, &h, &bytes_per_pixel);
-//
-//        var tex = Texture.initWithData(pixels[0..@intCast(usize, w * h * bytes_per_pixel)], w, h, .nearest);
-//        ImFontAtlas_SetTexID(io.Fonts, tex.imTextureID());
-//    }
-//}
-
-fn loadFont2() void {
+fn loadFont() void {
     var io = igGetIO();
     _ = ImFontAtlas_AddFontDefault(io.Fonts, null);
 
