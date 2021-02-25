@@ -19,7 +19,7 @@ pub fn main() !void {
 }
 
 fn init() void {
-    my_fonts.loadFonts();
+    my_fonts.loadFonts() catch unreachable;
 }
 
 fn update() void {
@@ -43,28 +43,28 @@ fn update() void {
             defer igEndMenuBar();
             if (igBeginMenu("Help", true)) {
                 defer igEndMenu();
-                igPushFont(my_fonts.my_font_14);
+                my_fonts.pushFontScaled(14);
                 if (igMenuItemBool("About", "About this awesome app", false, true)) {}
-                igPopFont();
+                my_fonts.popFontScaled(); // NOTE: for some reason, defer-ring this inside the if block does not work!
             }
 
             if (igBeginMenu("View", true)) {
-                igPushFont(my_fonts.my_font_64);
                 defer igEndMenu();
-                if (igMenuItemBool("Fullscreen", "ctrl+f", false, true)) {
+                my_fonts.pushFontScaled(129);
+                if (igMenuItemBool("Fullscreen", "Toggle full-screen mode!", false, true)) {
                     sapp_toggle_fullscreen();
                 }
-                igPopFont();
+                my_fonts.popFontScaled(); // NOTE: for some reason, defer-ring this inside the if block does not work!
             }
 
             if (igBeginMenu("Quit", true)) {
                 defer igEndMenu();
-                igPushFont(my_fonts.my_font_14);
+                my_fonts.pushFontScaled(14);
                 if (igMenuItemBool("now!", "Quit now", false, true)) {
                     // sapp_request_quit(); // reports the attempt to free an invalid pointer
                     std.process.exit(0);
                 }
-                igPopFont();
+                my_fonts.popFontScaled(); // NOTE: for some reason, defer-ring this inside the if block does not work!
             }
         }
         if (igButton("clickme", .{ .x = -1, .y = 0 })) {
