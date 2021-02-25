@@ -42,8 +42,18 @@ fn update() void {
             defer igEndMenuBar();
             if (igBeginMenu("Help", true)) {
                 defer igEndMenu();
-                if (igMenuItemBool("About", "About this awesome app", false, true)) {}
+                if (igMenuItemBool("About", "About this awesome app", false, true)) {
+                    sapp_toggle_fullscreen();
+                }
             }
+
+            if (igBeginMenu("View", true)) {
+                defer igEndMenu();
+                if (igMenuItemBool("Fullscreen", "ctrl+f", false, true)) {
+                    sapp_toggle_fullscreen();
+                }
+            }
+
             igPushFont(my_font);
             defer igPopFont();
             if (igBeginMenu("Quit", true)) {
