@@ -4,7 +4,7 @@ My first steps creating an imgui app in zig. The app doesn't serve any user purp
 
 It uses the default and a custom font, and scrollbars to verify that window resizes work.
 
-![image](https://user-images.githubusercontent.com/30892199/109077312-351f1e00-76fc-11eb-9f5b-2a61160ef2a7.png)
+![image](https://user-images.githubusercontent.com/30892199/109209146-7b7f8600-77ab-11eb-87ed-86b373d29254.png)
 
 The screenshot was taken on my Chromebook, a 2015 Google Pixelbook, running Ubuntu 20.04 under ChromeOS.
 
