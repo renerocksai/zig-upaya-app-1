@@ -21,6 +21,8 @@ fn init() void {
 }
 
 fn update() void {
+    // replace the default font
+    my_fonts.pushFontScaled(14);
     var mx: ImVec2 = .{ .x = 0, .y = 0 };
     igGetWindowContentRegionMax(&mx);
 
@@ -64,5 +66,8 @@ fn update() void {
         my_fonts.popFontScaled();
 
         igEnd();
+
+        // pop the default font
+        my_fonts.popFontScaled();
     }
 }

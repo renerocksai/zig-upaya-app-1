@@ -41,7 +41,23 @@ pub fn loadFonts() error{OutOfMemory}!void {
 var last_scale: f32 = 0.0;
 var last_font: *ImFont = undefined;
 
+pub const bakedFontInfo = struct {
+    font: *ImFont, size: i32
+};
+
 pub fn pushFontScaled(pixels: i32) void {
+    const font_info = getFontScaled(pixels);
+
+    // we assume we have a font, now scale it
+    last_scale = font_info.font.*.Scale;
+    const new_scale: f32 = @intToFloat(f32, pixels) / @intToFloat(f32, font_info.size);
+    //std.log.debug("--> Requested font size: {}, scaling from size: {} with scale: {}\n", .{ pixels, font_info.size, new_scale });
+    font_info.font.*.Scale = new_scale;
+    igPushFont(font_info.font);
+    last_font = font_info.font;
+}
+
+pub fn getFontScaled(pixels: i32) bakedFontInfo {
     var min_diff: i32 = 1000;
     var found_font_size: i32 = baked_font_sizes[0];
     var font: *ImFont = my_fonts.get(baked_font_sizes[0]).?; // we don't ever down-scale. hence, default to minimum font size
@@ -52,12 +68,13 @@ pub fn pushFontScaled(pixels: i32) void {
     for (baked_font_sizes) |fsize, i| {
         var diff = pixels - fsize;
 
-        std.log.debug("diff={}, pixels={}, fsize={}", .{ diff, pixels, fsize });
+        // std.log.debug("diff={}, pixels={}, fsize={}", .{ diff, pixels, fsize });
+
         // we only ever upscale, hence we look for positive differences only
         if (diff >= 0) {
             // we try to find the minimum difference
             if (diff < min_diff) {
-                std.log.debug("  diff={} is < than {}, so our new temp found_font_size={}", .{ diff, min_diff, fsize });
+                // std.log.debug("  diff={} is < than {}, so our new temp found_font_size={}", .{ diff, min_diff, fsize });
                 min_diff = diff;
                 font = my_fonts.get(fsize).?;
                 found_font_size = fsize;
@@ -65,13 +82,9 @@ pub fn pushFontScaled(pixels: i32) void {
         }
     }
 
-    // we assume we have a font, now scale it
-    last_scale = font.*.Scale;
-    const new_scale: f32 = @intToFloat(f32, pixels) / @intToFloat(f32, found_font_size);
-    std.log.debug("--> Requested font size: {}, scaling from size: {} with scale: {}\n", .{ pixels, found_font_size, new_scale });
-    font.*.Scale = new_scale;
-    igPushFont(font);
-    last_font = font;
+    const ret = bakedFontInfo{ .font = font, .size = found_font_size };
+
+    return ret;
 }
 
 pub fn getNearestFontSize(pixels: i32) i32 {
@@ -84,18 +97,19 @@ pub fn getNearestFontSize(pixels: i32) i32 {
     for (baked_font_sizes) |fsize, i| {
         var diff = pixels - fsize;
 
-        std.log.debug("diff={}, pixels={}, fsize={}", .{ diff, pixels, fsize });
+        // std.log.debug("diff={}, pixels={}, fsize={}", .{ diff, pixels, fsize });
+
         // we only ever upscale, hence we look for positive differences only
         if (diff >= 0) {
             // we try to find the minimum difference
             if (diff < min_diff) {
-                std.log.debug("  diff={} is < than {}, so our new temp found_font_size={}", .{ diff, min_diff, fsize });
+                // std.log.debug("  diff={} is < than {}, so our new temp found_font_size={}", .{ diff, min_diff, fsize });
                 min_diff = diff;
                 found_font_size = fsize;
             }
         }
     }
-    std.log.debug("--> Nearest font size of {} is {}", .{ pixels, found_font_size });
+    // std.log.debug("--> Nearest font size of {} is {}", .{ pixels, found_font_size });
     return found_font_size;
 }
 
