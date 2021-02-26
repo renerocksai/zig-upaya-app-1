@@ -52,6 +52,7 @@ fn scaleUI(new_scale: f32) void {
 // .
 
 var testButtonAnim = ButtonAnim{};
+var testButtonAnim2 = ButtonAnim{};
 
 // update will be called at every swap interval. with swap_interval = 1 above, we'll get 60 fps
 fn update() void {
@@ -102,10 +103,22 @@ fn update() void {
         }
 
         // we don't want the button size to be scaled shittily. Hence we look for the nearest (lower bound) font size.
-        my_fonts.pushFontScaled(my_fonts.getNearestFontSize(200));
+        my_fonts.pushFontScaled(my_fonts.getNearestFontSize(100));
+        igColumns(5, "", false);
+        igSpacing();
+        igNextColumn();
         if (animatedButton("clickme", .{ .x = -1, .y = 0 }, &testButtonAnim) == .released) {
             std.log.info("clicked!", .{});
         }
+        igNextColumn();
+        igSpacing();
+        igNextColumn();
+        _ = animatedButton("clickme", .{ .x = -1, .y = 0 }, &testButtonAnim2);
+        igNextColumn();
+        igSpacing();
+        igNextColumn();
+        igEndColumns();
+
         my_fonts.popFontScaled();
         //var buttonState = animatedButton("test", .{ .x = 100, .y = 100 }, &testButtonAnim);
         igEnd();
