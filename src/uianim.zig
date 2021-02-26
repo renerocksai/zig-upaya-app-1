@@ -1,3 +1,4 @@
+const std = @import("std");
 const upaya = @import("upaya");
 usingnamespace upaya.imgui;
 
@@ -37,30 +38,30 @@ pub fn doButton(label: [*c]const u8, size: ImVec2) ButtonState {
 }
 
 pub const ButtonAnim = struct {
-    ticker: u32 = 0,
+    ticker_ms: u32 = 0,
     prevState: ButtonState = .none,
     currentState: ButtonState = .none,
-    hover_duration: i32 = 500,
-    press_duration: i32 = 10,
-    release_duration: i32 = 10,
+    hover_duration: i32 = 200,
+    press_duration: i32 = 100,
+    release_duration: i32 = 100,
     current_color: ImVec4 = ImVec4{},
 };
 
-pub fn animateColor(from: ImVec4, to: ImVec4, duration_ms: i32, ticker: u32) ImVec4 {
-    var duration_ticks: f32 = @intToFloat(f32, duration_ms) / (frame_dt * 1000);
-    if (ticker >= @floatToInt(u32, duration_ticks)) {
+pub fn animateColor(from: ImVec4, to: ImVec4, duration_ms: i32, ticker_ms: u32) ImVec4 {
+    if (ticker_ms >= duration_ms) {
         return to;
     }
-    if (ticker <= 1) {
+    if (ticker_ms <= 1) {
         return from;
     }
 
     var ret = from;
-    var fticker: f32 = @intToFloat(f32, ticker);
-    ret.x += (to.x - from.x) / duration_ticks * fticker;
-    ret.y += (to.y - from.y) / duration_ticks * fticker;
-    ret.z += (to.z - from.z) / duration_ticks * fticker;
-    ret.w += (to.w - from.w) / duration_ticks * fticker;
+    var fduration_ms = @intToFloat(f32, duration_ms);
+    var fticker_ms = @intToFloat(f32, ticker_ms);
+    ret.x += (to.x - from.x) / fduration_ms * fticker_ms;
+    ret.y += (to.y - from.y) / fduration_ms * fticker_ms;
+    ret.z += (to.z - from.z) / fduration_ms * fticker_ms;
+    ret.w += (to.w - from.w) / fduration_ms * fticker_ms;
     return ret;
 }
 
@@ -90,18 +91,18 @@ pub fn animatedButton(label: [*c]const u8, size: ImVec2, anim: *ButtonAnim) Butt
     }
     if (anim.prevState == .released) anim_duration = anim.release_duration;
 
-    var currentColor = animateColor(fromColor, toColor, anim_duration, anim.ticker);
+    var currentColor = animateColor(fromColor, toColor, anim_duration, anim.ticker_ms);
     igPushStyleColorVec4(ImGuiCol_Button, currentColor);
     igPushStyleColorVec4(ImGuiCol_ButtonHovered, currentColor);
     igPushStyleColorVec4(ImGuiCol_ButtonActive, currentColor);
     var state = doButton(label, size);
     igPopStyleColor(3);
 
-    anim.ticker += 1;
+    anim.ticker_ms += @floatToInt(u32, frame_dt * 1000);
     if (state != anim.currentState) {
         anim.prevState = anim.currentState;
         anim.currentState = state;
-        anim.ticker = 0;
+        anim.ticker_ms = 0;
     }
     anim.current_color = currentColor;
     return state;
