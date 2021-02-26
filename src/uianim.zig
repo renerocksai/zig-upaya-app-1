@@ -40,7 +40,9 @@ pub const ButtonAnim = struct {
     ticker: u32 = 0,
     prevState: ButtonState = .none,
     currentState: ButtonState = .none,
-    global_anim_duration: i32 = 100, // @TODO : note, this will probably be split into individual animation times
+    hover_duration: i32 = 500,
+    press_duration: i32 = 10,
+    release_duration: i32 = 10,
     current_color: ImVec4 = ImVec4{},
 };
 
@@ -79,7 +81,16 @@ pub fn animatedButton(label: [*c]const u8, size: ImVec2, anim: *ButtonAnim) Butt
         .released => toColor = igGetStyleColorVec4(ImGuiCol_ButtonActive).*,
     }
 
-    var currentColor = animateColor(fromColor, toColor, anim.global_anim_duration, anim.ticker);
+    var anim_duration: i32 = 0;
+    switch (anim.currentState) {
+        .hovered => anim_duration = anim.hover_duration,
+        .pressed => anim_duration = anim.press_duration,
+        .released => anim_duration = anim.release_duration,
+        else => anim_duration = anim.hover_duration,
+    }
+    if (anim.prevState == .released) anim_duration = anim.release_duration;
+
+    var currentColor = animateColor(fromColor, toColor, anim_duration, anim.ticker);
     igPushStyleColorVec4(ImGuiCol_Button, currentColor);
     igPushStyleColorVec4(ImGuiCol_ButtonHovered, currentColor);
     igPushStyleColorVec4(ImGuiCol_ButtonActive, currentColor);
