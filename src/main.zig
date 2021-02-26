@@ -18,8 +18,8 @@ pub fn main() !void {
         .window_title = "rene window",
         .ini_file_storage = .none,
         .swap_interval = 1, // ca 16ms
-        .width = 1920,
-        .height = 1080,
+        .width = 1920 / 2,
+        .height = 1080 / 2,
     });
 }
 
