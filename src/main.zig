@@ -27,6 +27,27 @@ fn init() void {
 
 var b: bool = true;
 
+// .
+// UI scaling
+// .
+var global_scale: f32 = 1.0;
+
+fn relativeScaleForAbsoluteScale(new_scale: f32) f32 {
+    return new_scale / global_scale;
+}
+
+fn scaleUI(new_scale: f32) void {
+    var new_relative_scale = relativeScaleForAbsoluteScale(new_scale);
+    ImGuiStyle_ScaleAllSizes(igGetStyle(), new_relative_scale);
+    igGetIO().*.FontGlobalScale = new_scale;
+    std.log.info("new global_scale: {}, new relative scale: {}", .{ global_scale * new_relative_scale, new_relative_scale });
+    global_scale = new_scale;
+}
+
+// .
+// Main Update Frame Loop
+// .
+
 // update will be called at every swap interval. with swap_interval = 1 above, we'll get 60 fps
 fn update() void {
     // replace the default font
@@ -51,6 +72,15 @@ fn update() void {
                 my_fonts.pushFontScaled(64);
                 if (igMenuItemBool("Fullscreen", "Toggle full-screen mode!", false, true)) {
                     sapp_toggle_fullscreen();
+                }
+                if (igMenuItemBool("Scale 0.5", "", false, true)) {
+                    scaleUI(0.5);
+                }
+                if (igMenuItemBool("Scale 1.0", "", false, true)) {
+                    scaleUI(1.0);
+                }
+                if (igMenuItemBool("Scale 1.5", "", false, true)) {
+                    scaleUI(1.5);
                 }
                 my_fonts.popFontScaled();
             }
