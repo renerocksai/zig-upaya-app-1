@@ -103,7 +103,7 @@ fn update() void {
         }
 
         // we don't want the button size to be scaled shittily. Hence we look for the nearest (lower bound) font size.
-        my_fonts.pushFontScaled(my_fonts.getNearestFontSize(100));
+        my_fonts.pushFontScaled(my_fonts.getNearestFontSize(50));
         igColumns(5, "", false);
         igSpacing();
         igNextColumn();
